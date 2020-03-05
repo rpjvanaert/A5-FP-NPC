@@ -67,7 +67,8 @@ public class NpcDemo extends Application {
                 person.setTarget(new Point2D.Double(e.getX(), e.getY()));
             }
         });
-        
+
+        canvas.setOnMouseClicked(e -> clickAction(e));
 
     }
 
@@ -77,11 +78,7 @@ public class NpcDemo extends Application {
 
     public void init() {
         this.people = new ArrayList<>();
-
-        for(int i = 0; i < 30; i++) {
-            int number = (int)(Math.random() * ((6 - 1) + 1)) + 1;
-            this.people.add(new Person(new Point2D.Double(Math.random()*1800, Math.random()*1000), number));
-        }
+        spawnPeople(30);
     }
 
     public void draw(FXGraphics2D g2)
@@ -122,7 +119,7 @@ public class NpcDemo extends Application {
             int number = (int)(Math.random() * ((6 - 1) + 1)) + 1;
             Point2D newSpawnLocation = new Point2D.Double(Math.random()*1800, Math.random()*1000);
             if(canSpawn(newSpawnLocation)) {
-                this.people.add(new Person(newSpawnLocation, number));
+                this.people.add(new Person(newSpawnLocation, number,this.speed));
                 failedSpawnAttempts = 0;
             }else {
                 failedSpawnAttempts++;
@@ -130,6 +127,14 @@ public class NpcDemo extends Application {
                     return;
                 }
 
+            }
+        }
+    }
+
+    public void clickAction(MouseEvent e){
+        for(Person person : this.people){
+            if(person.getPosition().distance(new Point2D.Double(e.getX(),e.getY())) < 32){
+                person.playSoundEffect();
             }
         }
     }
