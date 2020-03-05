@@ -1,5 +1,9 @@
+import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -7,6 +11,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -16,11 +21,18 @@ public class Person {
     private double speed;
     private BufferedImage sprite;
     private String FavoriteGenre;
-    private Media soundEffetc;
+    private Media soundEffect;
+    private MediaPlayer mediaPlayer;
 
     private Point2D target;
     private double rotationSpeed;
 
+    private static final int Classic = 1;
+    private static final int Metal = 2;
+    private static final int Country = 3;
+    private static final int Electro = 4;
+    private static final int Pop = 5;
+    private static final int Rap = 6;
 
     public Person(Point2D position, int personNo) {
         this.position = position;
@@ -33,59 +45,59 @@ public class Person {
 
     public void Imagedecider(int number) {
         switch (number) {
-            case 1:
+            case Classic:
                 try {
                     this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/classic.png"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 this.FavoriteGenre = "classic";
-//                this.soundEffetc = new Media("/soundEffects/ClassicLaugh.mp3");
+                this.soundEffect = new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
                 break;
-            case 2:
+            case Metal:
                 try {
                     this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/metal.png"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 this.FavoriteGenre = "metal";
-//                this.soundEffetc = new Media("/soundEffects/MetalScream.mp3");
+                this.soundEffect = new Media(new File("resources/soundEffects/MetalScream.mp3").toURI().toString());
                 break;
-            case 3:
+            case Country:
                 try {
                     this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/country.png"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 this.FavoriteGenre = "Country";
-//                this.soundEffetc = new Media("/soundEffects/ClassicLaugh.mp3");
+                this.soundEffect = new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
                 break;
-            case 4:
+            case Electro:
                 try {
                     this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/electro.png"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 this.FavoriteGenre = "Electro";
-//                this.soundEffetc = new Media("/soundEffects/ClassicLaugh.mp3");
+                this.soundEffect = new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
                 break;
-            case 5:
+            case Pop:
                 try {
                     this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/Pop.png"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 this.FavoriteGenre = "Pop";
-//                this.soundEffetc = new Media("/soundEffects/ClassicLaugh.mp3");
+                this.soundEffect = new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
                 break;
-            case 6:
+            case Rap:
                 try {
                     this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/rap.png"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 this.FavoriteGenre = "rap";
-//                this.soundEffetc = new Media("/soundEffects/ClassicLaugh.mp3");
+                this.soundEffect = new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
                 break;
             default:
                 try {
@@ -94,9 +106,11 @@ public class Person {
                     e.printStackTrace();
                 }
                 this.FavoriteGenre = "npc";
-//                this.soundEffetc = new Media("/soundEffects/ClassicLaugh.mp3");
+                this.soundEffect= new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
                 break;
         }
+        this.mediaPlayer = new MediaPlayer(this.soundEffect);
+
     }
 
     public void update(ArrayList<Person> people) {
@@ -149,5 +163,9 @@ public class Person {
 
     public void setTarget(Point2D target) {
         this.target = target;
+    }
+
+    public void flipimage(){
+
     }
 }

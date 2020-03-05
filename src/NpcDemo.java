@@ -73,8 +73,7 @@ public class NpcDemo extends Application {
     public void init() {
         this.people = new ArrayList<>();
 
-
-        for(int i = 0; i < 50; i++) {
+        for(int i = 0; i < 30; i++) {
             int number = (int)(Math.random() * ((6 - 1) + 1)) + 1;
             this.people.add(new Person(new Point2D.Double(Math.random()*1800, Math.random()*1000), number));
         }
@@ -90,8 +89,6 @@ public class NpcDemo extends Application {
         for(Person person : people) {
             person.draw(g2);
         }
-
-
 
     }
 
