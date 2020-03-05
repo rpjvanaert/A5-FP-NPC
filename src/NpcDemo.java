@@ -34,6 +34,8 @@ import javax.swing.Timer;
 public class NpcDemo extends Application {
 
     private ResizableCanvas canvas;
+    private int amount = 30;
+    private int speed = 4;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -73,9 +75,13 @@ public class NpcDemo extends Application {
     public void init() {
         this.people = new ArrayList<>();
 
-        for(int i = 0; i < 30; i++) {
+        for(int i = 0; i < this.amount; i++) {
             int number = (int)(Math.random() * ((6 - 1) + 1)) + 1;
-            this.people.add(new Person(new Point2D.Double(Math.random()*1800, Math.random()*1000), number));
+            Person added = new Person(new Point2D.Double(Math.random()*1800, Math.random()*1000), number, this.speed);
+//            added.onMousePressedProperty(e ->{
+//                    added.playSoundEffect();
+//            });
+            this.people.add(added);
         }
     }
 

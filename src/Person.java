@@ -34,11 +34,11 @@ public class Person {
     private static final int Pop = 5;
     private static final int Rap = 6;
 
-    public Person(Point2D position, int personNo) {
+    public Person(Point2D position, int personNo, int speed) {
         this.position = position;
         Imagedecider(personNo);
         this.angle = 0;
-        this.speed = 2;
+        this.speed = speed;
         this.target = new Point2D.Double(200, 200);
         this.rotationSpeed = 0.1;
     }
@@ -165,7 +165,7 @@ public class Person {
         this.target = target;
     }
 
-    public void flipimage(){
-
+    public void playSoundEffect(){
+        this.mediaPlayer.play();
     }
 }
