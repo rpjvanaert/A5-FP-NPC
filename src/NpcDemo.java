@@ -1,6 +1,7 @@
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.jfree.fx.FXGraphics2D;
@@ -10,7 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
@@ -34,6 +34,7 @@ import javax.swing.Timer;
 public class NpcDemo extends Application {
 
     private ResizableCanvas canvas;
+    private ArrayList<Person> people;
     private int amount = 30;
     private int speed = 4;
 
@@ -66,22 +67,20 @@ public class NpcDemo extends Application {
                 person.setTarget(new Point2D.Double(e.getX(), e.getY()));
             }
         });
+        
+
     }
 
 
-    ArrayList<Person> people;
+
 
 
     public void init() {
         this.people = new ArrayList<>();
 
-        for(int i = 0; i < this.amount; i++) {
+        for(int i = 0; i < 30; i++) {
             int number = (int)(Math.random() * ((6 - 1) + 1)) + 1;
-            Person added = new Person(new Point2D.Double(Math.random()*1800, Math.random()*1000), number, this.speed);
-//            added.onMousePressedProperty(e ->{
-//                    added.playSoundEffect();
-//            });
-            this.people.add(added);
+            this.people.add(new Person(new Point2D.Double(Math.random()*1800, Math.random()*1000), number));
         }
     }
 
@@ -103,4 +102,36 @@ public class NpcDemo extends Application {
             person.update(people);
         }
     }
+
+    public boolean canSpawn(Point2D spawnPosition){
+        if(this.people.size() <= 0){
+            return true;
+        }
+        for(Person person : people){
+            if(spawnPosition.distance(person.getPosition()) < 64){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void spawnPeople(int amount){
+        int failedSpawnAttempts = 0;
+
+        for(int i = 0; i < amount; i++) {
+            int number = (int)(Math.random() * ((6 - 1) + 1)) + 1;
+            Point2D newSpawnLocation = new Point2D.Double(Math.random()*1800, Math.random()*1000);
+            if(canSpawn(newSpawnLocation)) {
+                this.people.add(new Person(newSpawnLocation, number));
+                failedSpawnAttempts = 0;
+            }else {
+                failedSpawnAttempts++;
+                if(failedSpawnAttempts > amount*0.1){
+                    return;
+                }
+
+            }
+        }
+    }
+
 }
