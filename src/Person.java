@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.util.Duration;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -70,7 +71,7 @@ public class Person {
                     e.printStackTrace();
                 }
                 this.FavoriteGenre = "Country";
-                this.soundEffect = new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
+                this.soundEffect = new Media(new File("resources/soundEffects/CountryAlabama.mp3").toURI().toString());
                 break;
             case Electro:
                 try {
@@ -170,6 +171,13 @@ public class Person {
     }
 
     public void playSoundEffect(){
+        if (this.FavoriteGenre.equals("metal")){
+            this.mediaPlayer.setVolume(0.05);
+        }
+        this.mediaPlayer.setStartTime(Duration.millis(0));
         this.mediaPlayer.play();
+        this.mediaPlayer.stop();
+        this.mediaPlayer.setStartTime(Duration.millis(0));
+
     }
 }
