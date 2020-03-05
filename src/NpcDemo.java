@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.Buffer;
 import java.nio.channels.NetworkChannel;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -72,18 +73,12 @@ public class NpcDemo extends Application {
     public void init() {
         this.people = new ArrayList<>();
 
-        BufferedImage image = null;
-        try {
-            image = ImageIO.read(this.getClass().getResourceAsStream("/images/npc.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         for(int i = 0; i < 50; i++) {
-            this.people.add(new Person(new Point2D.Double(Math.random()*1800, Math.random()*1000), image));
+            int number = (int)(Math.random() * ((6 - 1) + 1)) + 1;
+            this.people.add(new Person(new Point2D.Double(Math.random()*1800, Math.random()*1000), number));
         }
     }
-
 
     public void draw(FXGraphics2D g2)
     {
