@@ -154,6 +154,10 @@ public class Person {
         g.drawImage(sprite, getTransform(), null);
     }
 
+    public Point2D getPosition() {
+        return position;
+    }
+
     private AffineTransform getTransform() {
         AffineTransform tx = new AffineTransform();
         tx.translate(position.getX() - this.sprite.getWidth() / 2, position.getY() - this.sprite.getHeight() / 2);

@@ -34,6 +34,7 @@ import javax.swing.Timer;
 public class NpcDemo extends Application {
 
     private ResizableCanvas canvas;
+    private ArrayList<Person> people;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -64,19 +65,17 @@ public class NpcDemo extends Application {
                 person.setTarget(new Point2D.Double(e.getX(), e.getY()));
             }
         });
+
     }
 
 
-    ArrayList<Person> people;
+
 
 
     public void init() {
         this.people = new ArrayList<>();
-
-        for(int i = 0; i < 30; i++) {
-            int number = (int)(Math.random() * ((6 - 1) + 1)) + 1;
-            this.people.add(new Person(new Point2D.Double(Math.random()*1800, Math.random()*1000), number));
-        }
+        spawnPeople(10000);
+        System.out.println(this.people.size());
     }
 
     public void draw(FXGraphics2D g2)
@@ -95,6 +94,37 @@ public class NpcDemo extends Application {
     public void update(double frameTime) {
         for(Person person : people) {
             person.update(people);
+        }
+    }
+
+    public boolean canSpawn(Point2D spawnPosition){
+        if(this.people.size() <= 0){
+            return true;
+        }
+        for(Person person : people){
+            if(spawnPosition.distance(person.getPosition()) < 64){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void spawnPeople(int amount){
+        int failedSpawnAttempts = 0;
+
+        for(int i = 0; i < amount; i++) {
+            int number = (int)(Math.random() * ((6 - 1) + 1)) + 1;
+            Point2D newSpawnLocation = new Point2D.Double(Math.random()*1800, Math.random()*1000);
+            if(canSpawn(newSpawnLocation)) {
+                this.people.add(new Person(newSpawnLocation, number));
+                failedSpawnAttempts = 0;
+            }else {
+                failedSpawnAttempts++;
+                if(failedSpawnAttempts > amount*0.1){
+                    return;
+                }
+
+            }
         }
     }
 }
