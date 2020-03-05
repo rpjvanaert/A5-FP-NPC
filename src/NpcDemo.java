@@ -1,6 +1,7 @@
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.jfree.fx.FXGraphics2D;
@@ -10,7 +11,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
@@ -65,6 +65,7 @@ public class NpcDemo extends Application {
                 person.setTarget(new Point2D.Double(e.getX(), e.getY()));
             }
         });
+        
 
     }
 
@@ -75,7 +76,6 @@ public class NpcDemo extends Application {
     public void init() {
         this.people = new ArrayList<>();
         spawnPeople(10000);
-        System.out.println(this.people.size());
     }
 
     public void draw(FXGraphics2D g2)
@@ -127,4 +127,5 @@ public class NpcDemo extends Application {
             }
         }
     }
+
 }
