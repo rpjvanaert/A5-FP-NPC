@@ -21,8 +21,6 @@ public class Clock extends Application {
 
     private int speed;
 
-
-
     public static void main(String[] args) throws Exception { launch(args); }
     public void start(final Stage stage) throws Exception {
         // construct the analogueClock pieces.
@@ -52,8 +50,8 @@ public class Clock extends Application {
 
         // determine the starting time.
         Calendar calendar            = GregorianCalendar.getInstance();
-        final double seedMinuteDegrees  = calendar.get(Calendar.MINUTE) * (360 / 60);
-        final double seedHourDegrees    = (calendar.get(Calendar.HOUR)   + seedMinuteDegrees / 360.0) * (360 / 12) ;
+        final double seedMinuteDegrees  = 0 * (360 / 60);
+        final double seedHourDegrees    = 0 * (360 / 12);
 
         // define rotations to map the analogueClock to the current time.
         final Rotate hourRotate      = new Rotate(seedHourDegrees);
@@ -64,7 +62,7 @@ public class Clock extends Application {
         // the hour hand rotates twice a day.
         final Timeline hourTime = new Timeline(
                 new KeyFrame(
-                        Duration.minutes(12),
+                        Duration.minutes(60),
                         new KeyValue(
                                 hourRotate.angleProperty(),
                                 360 + seedHourDegrees,
@@ -198,6 +196,10 @@ public class Clock extends Application {
         sb.append(s);
 
         return sb.toString();
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
     }
 
     static String getResource(String path) {
