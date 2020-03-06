@@ -25,6 +25,7 @@ public class Person {
     private Media soundEffect;
     private MediaPlayer mediaPlayer;
     private String activity;
+    private int negativeFeedback = 5;
 
     private Point2D target;
     private double rotationSpeed;
@@ -103,6 +104,37 @@ public class Person {
         }
         this.mediaPlayer = new MediaPlayer(this.soundEffect);
     }
+
+    public void ChoiceMaker(){
+        int number = (int) (Math.random() * ((10 - 1) + 1)) + 1;
+        if (number>5/*this.FavoriteGenre==genre.getSuperGenre()*/){
+            //change back once integrated with the main application
+            if (number<2){
+                System.out.println("didn't go, so idle");
+                this.negativeFeedback--;
+            }
+            else {
+                System.out.println("did go to the show");
+                this.negativeFeedback = 5;
+            }
+        }
+        else{
+            if (number<=this.negativeFeedback){
+                System.out.println("didn't go, so idle");
+                this.negativeFeedback--;
+            }
+            else {
+                System.out.println("did go to the show");
+                this.negativeFeedback = 5;
+            }
+        }
+    }
+
+
+
+
+
+
 
     public void update(ArrayList<Person> people) {
         double targetAngle = Math.atan2(this.target.getY() - this.position.getY(),
