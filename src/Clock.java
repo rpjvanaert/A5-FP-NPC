@@ -15,8 +15,6 @@ import javafx.util.Duration;
 
 import java.util.*;
 
-/** Note that this clock does not keep perfect time, but is close.
- It's main purpose is to demonstrate various features of JavaFX. */
 public class Clock extends Application {
 
     private int speed = 4;
@@ -140,19 +138,6 @@ public class Clock extends Application {
         hourTime.play();
 
         stage.initStyle(StageStyle.TRANSPARENT);
-
-        // add a glow effect whenever the mouse is positioned over the clock.
-        final Glow glow = new Glow();
-        analogueClock.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override public void handle(MouseEvent mouseEvent) {
-                analogueClock.setEffect(glow);
-            }
-        });
-        analogueClock.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override public void handle(MouseEvent mouseEvent) {
-                analogueClock.setEffect(null);
-            }
-        });
 
         // fade out the scene and shut it down when the mouse is clicked on the clock.
         analogueClock.setOnMouseClicked(new EventHandler<MouseEvent>() {

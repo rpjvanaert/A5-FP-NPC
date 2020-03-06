@@ -41,7 +41,7 @@ public class Person {
 
     public void Imagedecider(ArrayList<Integer> GenreChance) {
         int number = (int) (Math.random() * ((GenreChance.get(6) - 1) + 1)) + 1;
-        if (GenreChance.get(0) <= number && number >= 0) {
+        if (GenreChance.get(0) >= number && number > 0) {
             try {
                 this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/metal.png"));
             } catch (IOException e) {
@@ -49,7 +49,7 @@ public class Person {
             }
             this.FavoriteGenre = "metal";
             this.soundEffect = new Media(new File("resources/soundEffects/MetalScream.mp3").toURI().toString());
-        } else if ((GenreChance.get(0) + GenreChance.get(1)) <= number && number > GenreChance.get(0)) {
+        } else if ((GenreChance.get(0) + GenreChance.get(1)) >= number && number > GenreChance.get(0)) {
             try {
                 this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/classic.png"));
             } catch (IOException e) {
@@ -57,7 +57,7 @@ public class Person {
             }
             this.FavoriteGenre = "classic";
             this.soundEffect = new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
-        } else if ((GenreChance.get(0) + GenreChance.get(1) + GenreChance.get(2)) <= number && number > (GenreChance.get(0) + GenreChance.get(1))) {
+        } else if ((GenreChance.get(0) + GenreChance.get(1) + GenreChance.get(2)) >= number && number > (GenreChance.get(0) + GenreChance.get(1))) {
             try {
                 this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/country.png"));
             } catch (IOException e) {
@@ -65,7 +65,7 @@ public class Person {
             }
             this.FavoriteGenre = "Country";
             this.soundEffect = new Media(new File("resources/soundEffects/CountryAlabama.mp3").toURI().toString());
-        } else if ((GenreChance.get(6) - GenreChance.get(5) - GenreChance.get(4)) <= number && number > (GenreChance.get(0) + GenreChance.get(1) + GenreChance.get(2))) {
+        } else if ((GenreChance.get(6) - GenreChance.get(5) - GenreChance.get(4)) >= number && number > (GenreChance.get(0) + GenreChance.get(1) + GenreChance.get(2))) {
             try {
                 this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/rap.png"));
             } catch (IOException e) {
@@ -73,7 +73,7 @@ public class Person {
             }
             this.FavoriteGenre = "rap";
             this.soundEffect = new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
-        } else if ((GenreChance.get(6) - GenreChance.get(5)) <= number && number > (GenreChance.get(6) - GenreChance.get(5) - GenreChance.get(4))) {
+        } else if ((GenreChance.get(6) - GenreChance.get(5)) >= number && number > (GenreChance.get(6) - GenreChance.get(5) - GenreChance.get(4))) {
 
             try {
                 this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/Pop.png"));
@@ -84,7 +84,7 @@ public class Person {
             this.soundEffect = new
 
                     Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
-        } else if (GenreChance.get(6) <= number && number > (GenreChance.get(6) - GenreChance.get(5))) {
+        } else if (GenreChance.get(6) >= number && number > (GenreChance.get(6) - GenreChance.get(5))) {
             try {
                 this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/electro.png"));
             } catch (IOException e) {
@@ -130,11 +130,9 @@ public class Person {
         }
     }
 
-
-
-
-
-
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
 
     public void update(ArrayList<Person> people) {
         double targetAngle = Math.atan2(this.target.getY() - this.position.getY(),

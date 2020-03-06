@@ -45,7 +45,6 @@ public class NpcDemo extends Application {
         BorderPane mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
-        predictedvisitors();
         FXGraphics2D g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
         new AnimationTimer() {
             long last = -1;
@@ -79,6 +78,7 @@ public class NpcDemo extends Application {
 
     public void init() {
         this.people = new ArrayList<>();
+        predictedvisitors();
         spawnPeople(30);
     }
 
