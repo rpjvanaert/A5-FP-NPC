@@ -19,7 +19,13 @@ import java.util.*;
  It's main purpose is to demonstrate various features of JavaFX. */
 public class Clock extends Application {
 
-    private int speed;
+    private int speed = 4;
+    private int minute = -1;
+    private int hour = 0;
+    private double minuteSpeed;
+    private double DigitalclockSpeed;
+    private double hourSpeed;
+
 
     public static void main(String[] args) throws Exception { launch(args); }
     public void start(final Stage stage) throws Exception {
@@ -34,6 +40,11 @@ public class Clock extends Application {
         minuteHand.setId("minuteHand");
         final Circle spindle = new Circle(100, 100, 5);
         spindle.setId("spindle");
+
+        this.hourSpeed = 12.0/this.speed;
+        this.minuteSpeed = 60.0/this.speed;
+        this.DigitalclockSpeed = this.minuteSpeed/60.0;
+
         Group ticks = new Group();
         for (int i = 0; i < 12; i++) {
             Line tick = new Line(0, -83, 0, -93);
@@ -62,7 +73,7 @@ public class Clock extends Application {
         // the hour hand rotates twice a day.
         final Timeline hourTime = new Timeline(
                 new KeyFrame(
-                        Duration.minutes(60),
+                        Duration.minutes(this.hourSpeed),
                         new KeyValue(
                                 hourRotate.angleProperty(),
                                 360 + seedHourDegrees,
@@ -74,7 +85,7 @@ public class Clock extends Application {
         // the minute hand rotates once an hour.
         final Timeline minuteTime = new Timeline(
                 new KeyFrame(
-                        Duration.seconds(60),
+                        Duration.seconds(this.minuteSpeed),
                         new KeyValue(
                                 minuteRotate.angleProperty(),
                                 360 + seedMinuteDegrees,
@@ -89,14 +100,33 @@ public class Clock extends Application {
                         new EventHandler<ActionEvent>() {
                             @Override public void handle(ActionEvent actionEvent) {
                                 Calendar calendar            = GregorianCalendar.getInstance();
-                                String hourString   = pad(2, '0', calendar.get(Calendar.HOUR)   == 0 ? "12" : calendar.get(Calendar.HOUR) + "");
-                                String minuteString = pad(2, '0', calendar.get(Calendar.MINUTE) + "");
-                                String ampmString   = calendar.get(Calendar.AM_PM) == Calendar.AM ? "AM" : "PM";
-                                digitalClock.setText(hourString + ":" + minuteString + " " + ampmString);
+                                minute++;
+                                String hourString = "";
+                                String minuteString ="";
+                                if (minute>=60){
+                                    minute = 0;
+                                    hour++;
+                                }
+                                if (minute>=10){
+                                    minuteString = minute + "";
+                                }
+                                else {
+                                    minuteString = "0"+minute;
+                                }
+                                if (hour>=24){
+                                    hour=0;
+                                }
+                                if (hour>=10){
+                                    hourString = hour + "";
+                                }
+                                else {
+                                    hourString = "0" + hour;
+                                }
+                                digitalClock.setText(hourString + ":" + minuteString);
                             }
                         }
                 ),
-                new KeyFrame(Duration.seconds(1))
+                new KeyFrame(Duration.seconds(this.DigitalclockSpeed))
         );
 
         // time never ends.

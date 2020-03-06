@@ -24,6 +24,7 @@ public class Person {
     private String FavoriteGenre;
     private Media soundEffect;
     private MediaPlayer mediaPlayer;
+    private String activity;
 
     private Point2D target;
     private double rotationSpeed;
@@ -157,6 +158,14 @@ public class Person {
 
     public void setTarget(Point2D target) {
         this.target = target;
+    }
+
+    public String getActivity() {
+        return activity;
+    }
+
+    public void setActivity(String activity) {
+        this.activity = activity;
     }
 
     public void playSoundEffect() {
