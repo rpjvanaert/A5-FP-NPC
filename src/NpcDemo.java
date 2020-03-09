@@ -18,6 +18,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.Buffer;
 import java.nio.channels.NetworkChannel;
@@ -39,6 +40,7 @@ public class NpcDemo extends Application {
     private int speed = 4;
     private Boolean PredictedGuests = true;
     private ArrayList<Integer> Prediction = new ArrayList<>();
+    private CameraTransform cameraTransform;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -46,6 +48,7 @@ public class NpcDemo extends Application {
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
         FXGraphics2D g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
+        this.cameraTransform = new CameraTransform(canvas);
         new AnimationTimer() {
             long last = -1;
 
@@ -66,26 +69,22 @@ public class NpcDemo extends Application {
 
         canvas.setOnMouseMoved(e ->
         {
+            double zoom = this.cameraTransform.getZoom();
             for (Person person : people) {
-                person.setTarget(new Point2D.Double(e.getX(), e.getY()));
+                person.setTarget(cameraTransform.getRelPoint2D(e.getX(), e.getY()));
             }
         });
 
         canvas.setOnMouseClicked(e -> clickAction(e));
-
-    }
-
-
-    public void init() {
-        this.people = new ArrayList<>();
-        predictedvisitors();
-        spawnPeople(30);
     }
 
     public void draw(FXGraphics2D g2) {
-        g2.setTransform(new AffineTransform());
+        Point2D p2d = this.cameraTransform.getCenterPoint();
+        double zoom = cameraTransform.getZoom();
+        g2.clearRect(-(int)p2d.getX(), -(int)p2d.getY(), (int) (canvas.getWidth() / zoom), (int) (canvas.getHeight() / zoom));
+        g2.setTransform(this.cameraTransform.getTransform());
         g2.setBackground(new Color(100, 75, 75));
-        g2.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+
 
 
         for (Person person : people) {

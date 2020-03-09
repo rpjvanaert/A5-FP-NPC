@@ -158,7 +158,7 @@ public class Person {
         boolean collided = false;
 
         for (Person other : people) {
-            if (other != this && newPosition.distance(other.position) < 64) {
+            if (other != this && newPosition.distance(other.position) < 32) {
                 collided = true;
             }
         }
