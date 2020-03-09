@@ -9,6 +9,7 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
 //@TODO Zoom relative to mouse
+//@TODO Relative Point2D including translate
 
 public class CameraTransform {
     private Point2D centerPoint;
@@ -20,7 +21,6 @@ public class CameraTransform {
     public CameraTransform(Canvas node){
         this.zoom = 1.0;
         this.centerPoint = new Point2D.Double(0,0);
-
         node.setOnScroll(event -> {
             zoom *= (1 + event.getDeltaY()/150.0f);
         });
@@ -52,10 +52,10 @@ public class CameraTransform {
         } else {
             return new AffineTransform();
         }
-
     }
 
     public Point2D getRelPoint2D(double x, double y){
-        return new Point2D.Double(x / zoom, y / zoom);
+        Point2D.Double relP2D = new Point2D.Double(x / zoom, y / zoom);
+        return relP2D;
     }
 }

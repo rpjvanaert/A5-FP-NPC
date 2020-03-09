@@ -1,6 +1,9 @@
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -42,6 +45,7 @@ public class NpcDemo extends Application {
     private Boolean PredictedGuests = true;
     private ArrayList<Integer> Prediction = new ArrayList<>();
     private CameraTransform cameraTransform;
+    private boolean showNull = false;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -68,6 +72,8 @@ public class NpcDemo extends Application {
         stage.show();
         draw(g2d);
 
+
+
         canvas.setOnMouseMoved(e ->
         {
             double zoom = this.cameraTransform.getZoom();
@@ -76,7 +82,19 @@ public class NpcDemo extends Application {
             }
         });
 
-        canvas.setOnMouseClicked(e -> clickAction(e));
+        canvas.setOnMouseClicked(e -> {
+            clickAction(e);
+            if (e.getButton() == MouseButton.SECONDARY){
+                this.showNull = !this.showNull;
+                if (this.showNull){
+                    System.out.println("Shows: Non CameraTransformed");
+                } else {
+                    System.out.println("Shows: CameraTransformed");
+                }
+            } else if (e.getButton() == MouseButton.PRIMARY){
+                this.init();
+            }
+        });
     }
 
     public void init() {
@@ -89,7 +107,11 @@ public class NpcDemo extends Application {
         Point2D p2d = this.cameraTransform.getCenterPoint();
         double zoom = cameraTransform.getZoom();
         g2.clearRect(-(int)p2d.getX(), -(int)p2d.getY(), (int) (canvas.getWidth() / zoom), (int) (canvas.getHeight() / zoom));
-        g2.setTransform(this.cameraTransform.getTransform());
+        if (!this.showNull){
+            g2.setTransform(this.cameraTransform.getTransform());
+        } else {
+            g2.setTransform(new AffineTransform());
+        }
         g2.setBackground(Color.WHITE);
         Shape rect = new Rectangle2D.Double(0,0,2500,2500);
         g2.setPaint(Color.BLACK);
