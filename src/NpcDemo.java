@@ -17,6 +17,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -78,13 +79,21 @@ public class NpcDemo extends Application {
         canvas.setOnMouseClicked(e -> clickAction(e));
     }
 
+    public void init() {
+        this.people = new ArrayList<>();
+        predictedvisitors();
+        spawnPeople(30);
+    }
+
     public void draw(FXGraphics2D g2) {
         Point2D p2d = this.cameraTransform.getCenterPoint();
         double zoom = cameraTransform.getZoom();
         g2.clearRect(-(int)p2d.getX(), -(int)p2d.getY(), (int) (canvas.getWidth() / zoom), (int) (canvas.getHeight() / zoom));
         g2.setTransform(this.cameraTransform.getTransform());
-        g2.setBackground(new Color(100, 75, 75));
-
+        g2.setBackground(Color.WHITE);
+        Shape rect = new Rectangle2D.Double(0,0,2500,2500);
+        g2.setPaint(Color.BLACK);
+        g2.draw(rect);
 
 
         for (Person person : people) {
