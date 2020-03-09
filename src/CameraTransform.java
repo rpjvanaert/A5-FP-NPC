@@ -9,13 +9,13 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
 //@TODO Zoom relative to mouse
-//@TODO Relative Point2D including translate
 
 public class CameraTransform {
     private Point2D centerPoint;
     private double zoom;
     private Point2D lastMousePos;
     private Canvas canvas;
+    private AffineTransform inverseTransform;
 
 
     public CameraTransform(Canvas node){
@@ -48,6 +48,11 @@ public class CameraTransform {
             AffineTransform tx = new AffineTransform();
             tx.scale(zoom, zoom);
             tx.translate(centerPoint.getX(), centerPoint.getY());
+            try {
+                this.inverseTransform = tx.createInverse();
+            } catch (NoninvertibleTransformException e) {
+                e.printStackTrace();
+            }
             return tx;
         } else {
             return new AffineTransform();
@@ -55,7 +60,7 @@ public class CameraTransform {
     }
 
     public Point2D getRelPoint2D(double x, double y){
-        Point2D.Double relP2D = new Point2D.Double(x / zoom, y / zoom);
+        Point2D.Double relP2D = new Point2D.Double(x * inverseTransform.getScaleX() + inverseTransform.getTranslateX(), y * inverseTransform.getScaleY() + inverseTransform.getTranslateY());
         return relP2D;
     }
 }
