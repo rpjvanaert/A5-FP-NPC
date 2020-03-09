@@ -44,7 +44,7 @@ public class CameraTransform {
     public double getZoom(){ return this.zoom; }
 
     public AffineTransform getTransform(){
-        if (centerPoint != null || lastMousePos != null){
+        if (centerPoint != null){
             AffineTransform tx = new AffineTransform();
             tx.scale(zoom, zoom);
             tx.translate(centerPoint.getX(), centerPoint.getY());
