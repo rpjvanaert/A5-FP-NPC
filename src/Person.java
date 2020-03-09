@@ -210,7 +210,7 @@ public class Person {
 
     }
 
-    public void setTargetMapName(Point2D mapName){
+    public void setTargetMapName(String mapName){
         this.targetMapName = mapName;
     }
 

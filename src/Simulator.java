@@ -11,6 +11,7 @@ import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -57,23 +58,15 @@ public class Simulator extends Application {
         stage.show();
         draw(g2d);
 
-<<<<<<< HEAD:src/Simulator.java
-        canvas.setOnMouseMoved(e -> {
-=======
-
 
         canvas.setOnMouseMoved(e ->
         {
->>>>>>> master:src/NpcDemo.java
             double zoom = this.cameraTransform.getZoom();
             for (Person person : people) {
                 person.setTarget(cameraTransform.getRelPoint2D(e.getX(), e.getY()));
             }
         });
 
-<<<<<<< HEAD:src/Simulator.java
-        canvas.setOnMouseClicked(this::clickAction);
-=======
         canvas.setOnMouseClicked(e -> {
             clickAction(e);
             if (e.getButton() == MouseButton.SECONDARY){
@@ -87,7 +80,6 @@ public class Simulator extends Application {
                 this.init();
             }
         });
->>>>>>> master:src/NpcDemo.java
     }
 
     public void init() {
@@ -109,17 +101,12 @@ public class Simulator extends Application {
     public void draw(FXGraphics2D g2) {
         Point2D p2d = this.cameraTransform.getCenterPoint();
         double zoom = cameraTransform.getZoom();
-<<<<<<< HEAD:src/Simulator.java
-        g2.clearRect(-(int) p2d.getX(), -(int) p2d.getY(), (int) (canvas.getWidth() / zoom), (int) (canvas.getHeight() / zoom));
-        g2.setTransform(this.cameraTransform.getTransform());
-=======
         g2.clearRect(-(int)p2d.getX(), -(int)p2d.getY(), (int) (canvas.getWidth() / zoom), (int) (canvas.getHeight() / zoom));
         if (!this.showNull){
             g2.setTransform(this.cameraTransform.getTransform());
         } else {
             g2.setTransform(new AffineTransform());
         }
->>>>>>> master:src/NpcDemo.java
         g2.setBackground(Color.WHITE);
         Shape rect = new Rectangle2D.Double(0, 0, 2500, 2500);
         g2.setPaint(Color.BLACK);
