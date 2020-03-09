@@ -8,45 +8,30 @@ import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.Buffer;
-import java.nio.channels.NetworkChannel;
 import java.util.ArrayList;
-import java.util.Random;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.Timer;
-
-public class NpcDemo extends Application {
+public class Simulator extends Application {
 
     private ResizableCanvas canvas;
     private ArrayList<Person> people;
-    private int amount = 30;
-    private int speed = 4;
-    private Boolean PredictedGuests = true;
+
+    private int peopleAmount = 30;
+    private int stageAmount = 6;
+    private int toiletAmount = 20;
+    private int globalSpeed = 4;
+
+    private boolean predictedGuests = true;
     private ArrayList<Integer> Prediction = new ArrayList<>();
     private CameraTransform cameraTransform;
 
+    private static DistanceMap[] distanceMaps;
+
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         BorderPane mainPane = new BorderPane();
-        canvas = new ResizableCanvas(g -> draw(g), mainPane);
+        canvas = new ResizableCanvas(this::draw, mainPane);
         mainPane.setCenter(canvas);
         FXGraphics2D g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
         this.cameraTransform = new CameraTransform(canvas);
@@ -68,38 +53,24 @@ public class NpcDemo extends Application {
         stage.show();
         draw(g2d);
 
-        canvas.setOnMouseMoved(e ->
-        {
+        canvas.setOnMouseMoved(e -> {
             double zoom = this.cameraTransform.getZoom();
             for (Person person : people) {
                 person.setTarget(cameraTransform.getRelPoint2D(e.getX(), e.getY()));
             }
         });
 
-        canvas.setOnMouseClicked(e -> clickAction(e));
+        canvas.setOnMouseClicked(this::clickAction);
     }
 
     public void init() {
         this.people = new ArrayList<>();
-        predictedvisitors();
-        spawnPeople(30);
-    }
+        this.distanceMaps = new DistanceMap[stageAmount + toiletAmount];
 
-    public void draw(FXGraphics2D g2) {
-        Point2D p2d = this.cameraTransform.getCenterPoint();
-        double zoom = cameraTransform.getZoom();
-        g2.clearRect(-(int)p2d.getX(), -(int)p2d.getY(), (int) (canvas.getWidth() / zoom), (int) (canvas.getHeight() / zoom));
-        g2.setTransform(this.cameraTransform.getTransform());
-        g2.setBackground(Color.WHITE);
-        Shape rect = new Rectangle2D.Double(0,0,2500,2500);
-        g2.setPaint(Color.BLACK);
-        g2.draw(rect);
+        // initializeDistanceMap();
 
-
-        for (Person person : people) {
-            person.draw(g2);
-        }
-
+        createPredictions();
+        spawnPeople(peopleAmount);
     }
 
     public void update(double frameTime) {
@@ -108,32 +79,53 @@ public class NpcDemo extends Application {
         }
     }
 
+    public void draw(FXGraphics2D g2) {
+        Point2D p2d = this.cameraTransform.getCenterPoint();
+        double zoom = cameraTransform.getZoom();
+        g2.clearRect(-(int) p2d.getX(), -(int) p2d.getY(), (int) (canvas.getWidth() / zoom), (int) (canvas.getHeight() / zoom));
+        g2.setTransform(this.cameraTransform.getTransform());
+        g2.setBackground(Color.WHITE);
+        Shape rect = new Rectangle2D.Double(0, 0, 2500, 2500);
+        g2.setPaint(Color.BLACK);
+        g2.draw(rect);
+
+        for (Person person : people) {
+            person.draw(g2);
+        }
+    }
+
     public boolean canSpawn(Point2D spawnPosition) {
         if (this.people.size() <= 0) {
             return true;
         }
+
         for (Person person : people) {
             if (spawnPosition.distance(person.getPosition()) < 64) {
                 return false;
             }
         }
+
         return true;
     }
 
     public void spawnPeople(int amount) {
         int failedSpawnAttempts = 0;
 
+//        Point2D newSpawnLocation = new Point2D.Double(Math.random() * 1800, Math.random() * 1000);
+        Point2D newSpawnLocation = new Point2D.Double(700, 1200);
+
         for (int i = 0; i < amount; i++) {
-            Point2D newSpawnLocation = new Point2D.Double(Math.random() * 1800, Math.random() * 1000);
+
             if (canSpawn(newSpawnLocation)) {
-                this.people.add(new Person(newSpawnLocation, this.Prediction, this.speed));
+                this.people.add(new Person(new Point2D.Double(newSpawnLocation.getX(),
+                        newSpawnLocation.getY() + i * 32), this.Prediction, this.globalSpeed));
                 failedSpawnAttempts = 0;
+
             } else {
                 failedSpawnAttempts++;
                 if (failedSpawnAttempts > amount * 0.1) {
                     return;
                 }
-
             }
         }
     }
@@ -146,64 +138,50 @@ public class NpcDemo extends Application {
         }
     }
 
-
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setPeopleAmount(int peopleAmount) {
+        this.peopleAmount = peopleAmount;
     }
 
-    public int getSpeed() {
-        return speed;
+    public int getGlobalSpeed() {
+        return globalSpeed;
     }
 
-    public int getAmount() {
-        return amount;
+    public int getPeopleAmount() {
+        return peopleAmount;
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
+    public void setGlobalSpeed(int globalSpeed) {
+        this.globalSpeed = globalSpeed;
     }
 
-    public void setPredictedGuests(Boolean predictedGuests) {
-        PredictedGuests = predictedGuests;
+    public void setPredictedGuests(boolean predictedGuests) {
+        this.predictedGuests = predictedGuests;
     }
 
-    public void predictedvisitors() {
+    public void createPredictions() {
         int Total = 6;
         int metal = 1;
         int Country = 1;
         int classic = 1;
         int Rap = 1;
         int Pop = 1;
-        int Electro = 1;
-        if (this.PredictedGuests) {
-//            for (Show show : DataController.getPlanner().getShows()) {
-//                String superGenre = show.getGenre.getSuperGenre();
-//                if (superGenre.equals("metal")) {
-//                    metal++;
-//                } else if (superGenre.equals("Country")) {
-//                    Country++;
-//                } else if (superGenre.equals("Classic")) {
-//                    classic++;
-//                } else if (superGenre.equals("Rap")) {
-//                    Rap++;
-//                } else if (superGenre.equals("Pop")) {
-//                    Pop++;
-//                } else if (superGenre.equals("Electro")) {
-//                    Electro++;
-//                }
-//
-//
-//                Total++;
-//            }
-        }
+        int electro = 1;
+
         this.Prediction.add(metal);
         this.Prediction.add(classic);
         this.Prediction.add(Country);
         this.Prediction.add(Rap);
         this.Prediction.add(Pop);
-        this.Prediction.add(Electro);
+        this.Prediction.add(electro);
         this.Prediction.add(Total);
     }
 
+    public static DistanceMap getDistanceMap(String mapName){
+        for (DistanceMap dm : distanceMaps) {
+            if (dm.getMapName().equals(mapName))
+                return dm;
+        }
 
+        return null;
+    }
 }
