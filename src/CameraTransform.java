@@ -15,12 +15,12 @@ public class CameraTransform {
     private double zoom;
     private Point2D lastMousePos;
     private Canvas canvas;
+    private AffineTransform inverseTransform;
 
 
     public CameraTransform(Canvas node){
         this.zoom = 1.0;
         this.centerPoint = new Point2D.Double(0,0);
-
         node.setOnScroll(event -> {
             zoom *= (1 + event.getDeltaY()/150.0f);
         });
@@ -48,14 +48,19 @@ public class CameraTransform {
             AffineTransform tx = new AffineTransform();
             tx.scale(zoom, zoom);
             tx.translate(centerPoint.getX(), centerPoint.getY());
+            try {
+                this.inverseTransform = tx.createInverse();
+            } catch (NoninvertibleTransformException e) {
+                e.printStackTrace();
+            }
             return tx;
         } else {
             return new AffineTransform();
         }
-
     }
 
     public Point2D getRelPoint2D(double x, double y){
-        return new Point2D.Double(x / zoom, y / zoom);
+        Point2D.Double relP2D = new Point2D.Double(x * inverseTransform.getScaleX() + inverseTransform.getTranslateX(), y * inverseTransform.getScaleY() + inverseTransform.getTranslateY());
+        return relP2D;
     }
 }

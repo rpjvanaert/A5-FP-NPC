@@ -1,6 +1,9 @@
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -25,6 +28,7 @@ public class Simulator extends Application {
     private boolean predictedGuests = true;
     private ArrayList<Integer> Prediction = new ArrayList<>();
     private CameraTransform cameraTransform;
+    private boolean showNull = false;
 
     private static DistanceMap[] distanceMaps;
 
@@ -53,14 +57,37 @@ public class Simulator extends Application {
         stage.show();
         draw(g2d);
 
+<<<<<<< HEAD:src/Simulator.java
         canvas.setOnMouseMoved(e -> {
+=======
+
+
+        canvas.setOnMouseMoved(e ->
+        {
+>>>>>>> master:src/NpcDemo.java
             double zoom = this.cameraTransform.getZoom();
             for (Person person : people) {
                 person.setTarget(cameraTransform.getRelPoint2D(e.getX(), e.getY()));
             }
         });
 
+<<<<<<< HEAD:src/Simulator.java
         canvas.setOnMouseClicked(this::clickAction);
+=======
+        canvas.setOnMouseClicked(e -> {
+            clickAction(e);
+            if (e.getButton() == MouseButton.SECONDARY){
+                this.showNull = !this.showNull;
+                if (this.showNull){
+                    System.out.println("Shows: Non CameraTransformed");
+                } else {
+                    System.out.println("Shows: CameraTransformed");
+                }
+            } else if (e.getButton() == MouseButton.PRIMARY){
+                this.init();
+            }
+        });
+>>>>>>> master:src/NpcDemo.java
     }
 
     public void init() {
@@ -82,8 +109,17 @@ public class Simulator extends Application {
     public void draw(FXGraphics2D g2) {
         Point2D p2d = this.cameraTransform.getCenterPoint();
         double zoom = cameraTransform.getZoom();
+<<<<<<< HEAD:src/Simulator.java
         g2.clearRect(-(int) p2d.getX(), -(int) p2d.getY(), (int) (canvas.getWidth() / zoom), (int) (canvas.getHeight() / zoom));
         g2.setTransform(this.cameraTransform.getTransform());
+=======
+        g2.clearRect(-(int)p2d.getX(), -(int)p2d.getY(), (int) (canvas.getWidth() / zoom), (int) (canvas.getHeight() / zoom));
+        if (!this.showNull){
+            g2.setTransform(this.cameraTransform.getTransform());
+        } else {
+            g2.setTransform(new AffineTransform());
+        }
+>>>>>>> master:src/NpcDemo.java
         g2.setBackground(Color.WHITE);
         Shape rect = new Rectangle2D.Double(0, 0, 2500, 2500);
         g2.setPaint(Color.BLACK);
