@@ -1,16 +1,11 @@
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +16,7 @@ public class Person {
     private double angle;
     private double speed;
     private BufferedImage sprite;
-    private String FavoriteGenre;
+    private String favoriteGenre;
     private Media soundEffect;
     private MediaPlayer mediaPlayer;
     private String activity;
@@ -29,68 +24,70 @@ public class Person {
 
     private Point2D target;
     private double rotationSpeed;
+    private String targetMapName;
 
-    public Person(Point2D position, ArrayList GenreChance, int speed) {
+    public Person(Point2D position, ArrayList<Integer> genreChanceList, int speed) {
         this.position = position;
-        Imagedecider(GenreChance);
+        imageDecider(genreChanceList);
         this.angle = 0;
         this.speed = speed;
         this.target = new Point2D.Double(200, 200);
         this.rotationSpeed = 0.1;
     }
 
-    public void Imagedecider(ArrayList<Integer> GenreChance) {
-        int number = (int) (Math.random() * ((GenreChance.get(6) - 1) + 1)) + 1;
-        if (GenreChance.get(0) >= number && number > 0) {
+    public void imageDecider(ArrayList<Integer> genreChance) {
+        int number = (int) (Math.random() * ((genreChance.get(6) - 1) + 1)) + 1;
+
+        if (genreChance.get(0) >= number && number > 0) {
             try {
                 this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/metal.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            this.FavoriteGenre = "metal";
+            this.favoriteGenre = "metal";
             this.soundEffect = new Media(new File("resources/soundEffects/MetalScream.mp3").toURI().toString());
-        } else if ((GenreChance.get(0) + GenreChance.get(1)) >= number && number > GenreChance.get(0)) {
+        } else if ((genreChance.get(0) + genreChance.get(1)) >= number && number > genreChance.get(0)) {
             try {
                 this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/classic.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            this.FavoriteGenre = "classic";
+            this.favoriteGenre = "classic";
             this.soundEffect = new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
-        } else if ((GenreChance.get(0) + GenreChance.get(1) + GenreChance.get(2)) >= number && number > (GenreChance.get(0) + GenreChance.get(1))) {
+        } else if ((genreChance.get(0) + genreChance.get(1) + genreChance.get(2)) >= number && number > (genreChance.get(0) + genreChance.get(1))) {
             try {
                 this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/country.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            this.FavoriteGenre = "Country";
+            this.favoriteGenre = "Country";
             this.soundEffect = new Media(new File("resources/soundEffects/CountryAlabama.mp3").toURI().toString());
-        } else if ((GenreChance.get(6) - GenreChance.get(5) - GenreChance.get(4)) >= number && number > (GenreChance.get(0) + GenreChance.get(1) + GenreChance.get(2))) {
+        } else if ((genreChance.get(6) - genreChance.get(5) - genreChance.get(4)) >= number && number > (genreChance.get(0) + genreChance.get(1) + genreChance.get(2))) {
             try {
                 this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/rap.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            this.FavoriteGenre = "rap";
+            this.favoriteGenre = "rap";
             this.soundEffect = new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
-        } else if ((GenreChance.get(6) - GenreChance.get(5)) >= number && number > (GenreChance.get(6) - GenreChance.get(5) - GenreChance.get(4))) {
+        } else if ((genreChance.get(6) - genreChance.get(5)) >= number && number > (genreChance.get(6) - genreChance.get(5) - genreChance.get(4))) {
 
             try {
                 this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/Pop.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            this.FavoriteGenre = "Pop";
+            this.favoriteGenre = "Pop";
             this.soundEffect = new
 
                     Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
-        } else if (GenreChance.get(6) >= number && number > (GenreChance.get(6) - GenreChance.get(5))) {
+        } else if (genreChance.get(6) >= number && number > (genreChance.get(6) - genreChance.get(5))) {
             try {
                 this.sprite = ImageIO.read(this.getClass().getResourceAsStream("/images/electro.png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            this.FavoriteGenre = "Electro";
+            this.favoriteGenre = "Electro";
             this.soundEffect = new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
         } else {
             try {
@@ -98,32 +95,29 @@ public class Person {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            this.FavoriteGenre = "npc";
+            this.favoriteGenre = "npc";
             this.soundEffect = new Media(new File("resources/soundEffects/ClassicLaugh.mp3").toURI().toString());
 
         }
         this.mediaPlayer = new MediaPlayer(this.soundEffect);
     }
 
-    public void ChoiceMaker(){
+    public void choiceMaker() {
         int number = (int) (Math.random() * ((10 - 1) + 1)) + 1;
-        if (number>5/*this.FavoriteGenre==genre.getSuperGenre()*/){
+        if (number > 5/*this.favoriteGenre==genre.getSuperGenre()*/) {
             //change back once integrated with the main application
-            if (number<2){
+            if (number < 2) {
                 System.out.println("didn't go, so idle");
                 this.negativeFeedback--;
-            }
-            else {
+            } else {
                 System.out.println("did go to the show");
                 this.negativeFeedback = 5;
             }
-        }
-        else{
-            if (number<=this.negativeFeedback){
+        } else {
+            if (number <= this.negativeFeedback) {
                 System.out.println("didn't go, so idle");
                 this.negativeFeedback--;
-            }
-            else {
+            } else {
                 System.out.println("did go to the show");
                 this.negativeFeedback = 5;
             }
@@ -135,6 +129,14 @@ public class Person {
     }
 
     public void update(ArrayList<Person> people) {
+
+        if (hasArrivedAtDestination()){
+            //
+        } else if (hasArrivedAtTarget()){
+            setNextTarget();
+        }
+
+
         double targetAngle = Math.atan2(this.target.getY() - this.position.getY(),
                 this.target.getX() - this.position.getX());
 
@@ -162,7 +164,6 @@ public class Person {
                 collided = true;
             }
         }
-
 
         if (!collided) {
             this.position = newPosition;
@@ -199,7 +200,7 @@ public class Person {
     }
 
     public void playSoundEffect() {
-        if (this.FavoriteGenre.equals("metal")) {
+        if (this.favoriteGenre.equals("metal")) {
             this.mediaPlayer.setVolume(0.05);
         }
         this.mediaPlayer.setStartTime(Duration.millis(0));
@@ -207,5 +208,24 @@ public class Person {
         this.mediaPlayer.stop();
         this.mediaPlayer.setStartTime(Duration.millis(0));
 
+    }
+
+    public void setTargetMapName(Point2D mapName){
+        this.targetMapName = mapName;
+    }
+
+    public boolean hasArrivedAtTarget(){
+        double distanceAmount = 5;
+        return position.distance(target.getX(), target.getY()) < distanceAmount;
+    }
+
+    private boolean hasArrivedAtDestination() {
+        double distanceAmount = 5;
+        // TODO: Add logic
+        return false;
+    }
+
+    public void setNextTarget(){
+        this.target = PathCalculator.nextTarget(this.position, targetMapName);
     }
 }
