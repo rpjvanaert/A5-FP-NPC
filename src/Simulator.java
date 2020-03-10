@@ -1,8 +1,6 @@
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -30,6 +28,9 @@ public class Simulator extends Application {
     private ArrayList<Integer> Prediction = new ArrayList<>();
     private CameraTransform cameraTransform;
     private boolean showNull = false;
+
+
+
 
     private static DistanceMap[] distanceMaps;
 
@@ -59,13 +60,13 @@ public class Simulator extends Application {
         draw(g2d);
 
 
-        canvas.setOnMouseMoved(e ->
-        {
-            double zoom = this.cameraTransform.getZoom();
-            for (Person person : people) {
-                person.setTarget(cameraTransform.getRelPoint2D(e.getX(), e.getY()));
-            }
-        });
+//        canvas.setOnMouseMoved(e ->
+//        {
+//            double zoom = this.cameraTransform.getZoom();
+//            for (Person person : people) {
+//                person.setTarget(cameraTransform.getRelPoint2D(e.getX(), e.getY()));
+//            }
+//        });
 
         canvas.setOnMouseClicked(e -> {
             clickAction(e);
@@ -87,6 +88,19 @@ public class Simulator extends Application {
         this.distanceMaps = new DistanceMap[stageAmount + toiletAmount];
 
         // initializeDistanceMap();
+
+        Boolean[][] walkableMap = new Boolean[100][100];
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
+                walkableMap[i][j] = true;
+            }
+        }
+
+        WalkableMap wMap = new WalkableMap(walkableMap);
+        DistanceMap testMap1 = new DistanceMap("TestMap1", new TargetArea(new Point2D.Double(20,20), new Point2D[]{new Point2D.Double(30,10)} ),wMap);
+        DistanceMap testMap2 = new DistanceMap("TestMap2", new TargetArea(new Point2D.Double(30,10), new Point2D[]{new Point2D.Double(0,20)}), wMap);
+        DistanceMap testMap3 = new DistanceMap("TestMap3", new TargetArea(new Point2D.Double(10,0), new Point2D[]{new Point2D.Double(50,50)}), wMap);
+        distanceMaps = new DistanceMap[]{testMap1,testMap2,testMap3};
 
         createPredictions();
         spawnPeople(peopleAmount);
@@ -134,15 +148,14 @@ public class Simulator extends Application {
     public void spawnPeople(int amount) {
         int failedSpawnAttempts = 0;
 
-//        Point2D newSpawnLocation = new Point2D.Double(Math.random() * 1800, Math.random() * 1000);
-        Point2D newSpawnLocation = new Point2D.Double(700, 1200);
+
 
         for (int i = 0; i < amount; i++) {
 
+            Point2D newSpawnLocation = new Point2D.Double(Math.random() * 1800, Math.random() * 1000);
             if (canSpawn(newSpawnLocation)) {
                 this.people.add(new Person(new Point2D.Double(newSpawnLocation.getX(),
                         newSpawnLocation.getY() + i * 32), this.Prediction, this.globalSpeed));
-                failedSpawnAttempts = 0;
 
             } else {
                 failedSpawnAttempts++;
@@ -207,4 +220,5 @@ public class Simulator extends Application {
 
         return null;
     }
+
 }

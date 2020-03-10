@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Person {
     private Point2D position;
@@ -31,8 +32,9 @@ public class Person {
         imageDecider(genreChanceList);
         this.angle = 0;
         this.speed = speed;
-        this.target = new Point2D.Double(200, 200);
-        this.rotationSpeed = 0.1;
+        this.target = position;
+        this.rotationSpeed = 100;
+        this.targetMapName = selectRandomMap();
     }
 
     public void imageDecider(ArrayList<Integer> genreChance) {
@@ -131,7 +133,8 @@ public class Person {
     public void update(ArrayList<Person> people) {
 
         if (hasArrivedAtDestination()){
-            //
+            this.targetMapName = selectRandomMap();
+            setNextTarget();
         } else if (hasArrivedAtTarget()){
             setNextTarget();
         }
@@ -215,17 +218,36 @@ public class Person {
     }
 
     public boolean hasArrivedAtTarget(){
-        double distanceAmount = 5;
+        double distanceAmount = 17;
         return position.distance(target.getX(), target.getY()) < distanceAmount;
     }
 
     private boolean hasArrivedAtDestination() {
-        double distanceAmount = 5;
+        double distanceAmount = 16;
         // TODO: Add logic
+        if(this.target.distance(new Point2D.Double(-1,-1)) < distanceAmount){
+            return true;
+        }
         return false;
     }
 
     public void setNextTarget(){
         this.target = PathCalculator.nextTarget(this.position, targetMapName);
+    }
+
+    public String selectRandomMap(){
+        Random random = new Random();
+        String mapName = null;
+        int randomNumber = random.nextInt(3);
+        switch (randomNumber){
+            case 0: mapName = "TestMap1";
+            break;
+            case 1: mapName = "TestMap2";
+            break;
+            case 2: mapName = "TestMap3";
+            break;
+
+        }
+        return mapName;
     }
 }

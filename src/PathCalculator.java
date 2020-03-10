@@ -8,17 +8,22 @@ public class PathCalculator {
         int Yindex = (int) Math.floor(currPos.getY() / 32.0);
 
         DistanceMap distanceMap = Simulator.getDistanceMap(mapName);
+        System.out.println(distanceMap.getTarget().getMiddlePoint());
+        Point2D middlePointCoords = new Point2D.Double(distanceMap.getTarget().getMiddlePoint().getX() * 32, distanceMap.getTarget().getMiddlePoint().getY() * 32);
+        if(middlePointCoords.distance(currPos) <= 32){
+            return new Point2D.Double(-1,-1);
+        }
 
         int lowest = Integer.MAX_VALUE;
         int lowestIndexX = Integer.MAX_VALUE;
         int lowestIndexY = Integer.MAX_VALUE;
 
-        for (int yOffset = -1; yOffset < 1; yOffset++) {
-            for (int xOffset = -1; xOffset < 1; xOffset++) {
+        for (int yOffset = -1; yOffset <= 1; yOffset++) {
+            for (int xOffset = -1; xOffset <= 1; xOffset++) {
                 int currX = Xindex + xOffset;
                 int currY = Yindex + yOffset;
                 if (currX > -1 && currX < 99 && currY > -1 && currY < 99) {
-                    int value = distanceMap.getDistanceMap()[currX][currY];
+                    int value = distanceMap.getMap()[currX][currY];
                     if(value < lowest){
                         lowest = value;
                         lowestIndexX = currX;
@@ -28,6 +33,6 @@ public class PathCalculator {
             }
         }
 
-        return new Point2D.Double(lowestIndexX * 32, lowestIndexY * 32);
+        return new Point2D.Double(lowestIndexX * 32 + 16, lowestIndexY * 32 + 16);
     }
 }
