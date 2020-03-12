@@ -108,6 +108,7 @@ public class Simulator extends Application {
 
         createPredictions();
         spawnPeople(peopleAmount);
+        System.out.println(this.people.size());
     }
 
     public void update(double frameTime) {
@@ -126,11 +127,11 @@ public class Simulator extends Application {
             g2.setTransform(new AffineTransform());
         }
         //testGrid
-//        for(int x = 0; x< canvas.getWidth(); x+=32){
-//            g2.drawLine(x,0,x,(int) canvas.getHeight());
+//        for(int x = 0; x< 100 * 32; x+=32){
+//            g2.drawLine(x,0,x, 100 * 32);
 //        }
-//        for(int y = 0; y < canvas.getHeight(); y += 32){
-//            g2.drawLine(0,y,(int) canvas.getWidth(),y);
+//        for(int y = 0; y < 100 * 32; y += 32){
+//            g2.drawLine(0,y,100 * 32,y);
 //        }
 
         //the not walkable area
@@ -160,9 +161,16 @@ public class Simulator extends Application {
             if (spawnPosition.distance(person.getPosition()) <= 64) {
                 return false;
             }
+            if(!PathCalculator.isWalkable(spawnPosition)){
+                return false;
+            }
         }
 
         return true;
+    }
+
+    public static DistanceMap[] getDistanceMaps() {
+        return distanceMaps;
     }
 
     /**
@@ -172,17 +180,16 @@ public class Simulator extends Application {
     public void spawnPeople(int amount) {
         int failedSpawnAttempts = 0;
 
-
-
         for (int i = 0; i < amount; i++) {
 
             Point2D newSpawnLocation = new Point2D.Double(Math.random() * 100 * 32, Math.random() * 100  * 32);
             if (canSpawn(newSpawnLocation)) {
                 this.people.add(new Person(new Point2D.Double(newSpawnLocation.getX(),
                         newSpawnLocation.getY() ), this.Prediction, this.globalSpeed));
-
+                        failedSpawnAttempts = 0;
             } else {
                 failedSpawnAttempts++;
+                i--;
                 if (failedSpawnAttempts > amount * 0.1) {
                     return;
                 }
