@@ -29,9 +29,6 @@ public class Simulator extends Application {
     private CameraTransform cameraTransform;
     private boolean showNull = false;
 
-
-
-
     private static DistanceMap[] distanceMaps;
 
     @Override
