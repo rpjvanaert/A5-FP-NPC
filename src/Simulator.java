@@ -108,7 +108,6 @@ public class Simulator extends Application {
 
         createPredictions();
         spawnPeople(peopleAmount);
-        System.out.println(this.people.size());
     }
 
     public void update(double frameTime) {
