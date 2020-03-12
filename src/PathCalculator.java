@@ -40,4 +40,30 @@ public class PathCalculator {
 
         return new Point2D.Double(lowestIndexX * 32 + 16, lowestIndexY * 32 + 16);
     }
+
+    /**
+     * Finds a random tile that is walkable and closest to a point
+     * @param currentPosition the position the character is currently on
+     * @param mapName the name of the DistanceMap it is walking on
+     * @return the available tile, if not found return the currentPosition
+     */
+    public static Point2D findRandomClosestWalkable(Point2D currentPosition, String mapName){
+        DistanceMap distanceMap = Simulator.getDistanceMap(mapName);
+        int failedAttempts = 0;
+        while( failedAttempts < 8) {
+            int xPos = (int) Math.floor(Math.random() * 2.9) - 1 + ((int)currentPosition.getX())/32;
+            int yPos = (int) Math.floor(Math.random() * 2.9) - 1 + ((int) currentPosition.getY())/32;
+            xPos = Math.min(xPos, 99);
+            xPos = Math.max(0, xPos);
+            yPos = Math.min(yPos,99);
+            yPos = Math.max(0,yPos);
+            Boolean [][] walkableMap = distanceMap.getWalkableMap();
+            if(walkableMap[xPos][yPos] == true){
+                return new Point2D.Double(xPos * 32,yPos * 32);
+            }
+            failedAttempts++;
+        }
+
+        return currentPosition;
+    }
 }

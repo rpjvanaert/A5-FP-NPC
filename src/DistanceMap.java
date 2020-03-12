@@ -16,6 +16,10 @@ public class DistanceMap {
         return target;
     }
 
+    public Boolean[][] getWalkableMap() {
+        return walkableMap;
+    }
+
     /**
      * Makes a distanceMap which can be used to find the shortest path
      * @param mapName The name of the map

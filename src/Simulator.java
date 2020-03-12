@@ -19,7 +19,7 @@ public class Simulator extends Application {
     private ResizableCanvas canvas;
     private ArrayList<Person> people;
 
-    private int peopleAmount = 30;
+    private int peopleAmount = 300;
     private int stageAmount = 6;
     private int toiletAmount = 20;
     private int globalSpeed = 4;
@@ -70,14 +70,15 @@ public class Simulator extends Application {
 
         canvas.setOnMouseClicked(e -> {
             clickAction(e);
-            if (e.getButton() == MouseButton.SECONDARY){
-                this.showNull = !this.showNull;
-                if (this.showNull){
-                    System.out.println("Shows: Non CameraTransformed");
-                } else {
-                    System.out.println("Shows: CameraTransformed");
-                }
-            } else if (e.getButton() == MouseButton.PRIMARY){
+//            if (e.getButton() == MouseButton.SECONDARY){
+//                this.showNull = !this.showNull;
+//                if (this.showNull){
+//                    System.out.println("Shows: Non CameraTransformed");
+//                } else {
+//                    System.out.println("Shows: CameraTransformed");
+//                }
+//            } else
+            if (e.getButton() == MouseButton.PRIMARY){
                 this.init();
             }
         });
@@ -95,11 +96,17 @@ public class Simulator extends Application {
                 walkableMap[i][j] = true;
             }
         }
+        for (int i = 33; i < 66; i++) {
+            for (int j = 33; j < 66; j++) {
+                walkableMap[i][j] = false;
+            }
+        }
+
 
         WalkableMap wMap = new WalkableMap(walkableMap);
-        DistanceMap testMap1 = new DistanceMap("TestMap1", new TargetArea(new Point2D.Double(20,20), new Point2D[]{new Point2D.Double(30,10)} ),wMap);
-        DistanceMap testMap2 = new DistanceMap("TestMap2", new TargetArea(new Point2D.Double(30,10), new Point2D[]{new Point2D.Double(0,20)}), wMap);
-        DistanceMap testMap3 = new DistanceMap("TestMap3", new TargetArea(new Point2D.Double(10,0), new Point2D[]{new Point2D.Double(50,50)}), wMap);
+        DistanceMap testMap1 = new DistanceMap("TestMap1", new TargetArea(new Point2D.Double(80,20), new Point2D[]{new Point2D.Double(30,10)} ),wMap);
+        DistanceMap testMap2 = new DistanceMap("TestMap2", new TargetArea(new Point2D.Double(20,80), new Point2D[]{new Point2D.Double(0,20)}), wMap);
+        DistanceMap testMap3 = new DistanceMap("TestMap3", new TargetArea(new Point2D.Double(80,80), new Point2D[]{new Point2D.Double(50,50)}), wMap);
         distanceMaps = new DistanceMap[]{testMap1,testMap2,testMap3};
 
         createPredictions();
@@ -129,6 +136,9 @@ public class Simulator extends Application {
 //            g2.drawLine(0,y,(int) canvas.getWidth(),y);
 //        }
 
+        //the not walkable area
+        g2.fill(new Rectangle2D.Double(34*32,34*32,33*32,33*32));
+
         g2.setBackground(Color.WHITE);
         Shape rect = new Rectangle2D.Double(0, 0, 2500, 2500);
         g2.setPaint(Color.BLACK);
@@ -150,7 +160,7 @@ public class Simulator extends Application {
         }
 
         for (Person person : people) {
-            if (spawnPosition.distance(person.getPosition()) < 64) {
+            if (spawnPosition.distance(person.getPosition()) <= 64) {
                 return false;
             }
         }
@@ -169,10 +179,10 @@ public class Simulator extends Application {
 
         for (int i = 0; i < amount; i++) {
 
-            Point2D newSpawnLocation = new Point2D.Double(Math.random() * 1800, Math.random() * 1000);
+            Point2D newSpawnLocation = new Point2D.Double(Math.random() * 100 * 32, Math.random() * 100  * 32);
             if (canSpawn(newSpawnLocation)) {
                 this.people.add(new Person(new Point2D.Double(newSpawnLocation.getX(),
-                        newSpawnLocation.getY() + i * 32), this.Prediction, this.globalSpeed));
+                        newSpawnLocation.getY() ), this.Prediction, this.globalSpeed));
 
             } else {
                 failedSpawnAttempts++;

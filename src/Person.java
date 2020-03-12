@@ -188,10 +188,7 @@ public class Person {
         if (!collided) {
             this.position = newPosition;
         } else {
-            int xOffset = (int) Math.floor( Math.random() * 2.9) - 1;
-            int yOffset = (int) Math.floor( Math.random() * 2.9) - 1;
-            this.target = new Point2D.Double(this.position.getX()+ xOffset * 32,
-                                                this.position.getY() + yOffset * 32);
+            this.target = PathCalculator.findRandomClosestWalkable(this.position,this.targetMapName);
         }
     }
 
