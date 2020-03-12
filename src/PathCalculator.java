@@ -2,13 +2,18 @@ import java.awt.geom.Point2D;
 
 public class PathCalculator {
 
+    /**
+     * Calculates the next target for a Person, allows movement in 8 directions
+     * @param currPos the current position of the character
+     * @param mapName the name of the map of the destination of the character
+     * @return the next position the character moves to
+     */
     public static Point2D nextTarget(Point2D currPos, String mapName){
         // TODO: Not hardcode this 32 tilesize and retrieve from tile logic
         int Xindex = (int) Math.floor(currPos.getX() / 32.0);
         int Yindex = (int) Math.floor(currPos.getY() / 32.0);
 
         DistanceMap distanceMap = Simulator.getDistanceMap(mapName);
-        System.out.println(distanceMap.getTarget().getMiddlePoint());
         Point2D middlePointCoords = new Point2D.Double(distanceMap.getTarget().getMiddlePoint().getX() * 32, distanceMap.getTarget().getMiddlePoint().getY() * 32);
         if(middlePointCoords.distance(currPos) <= 32){
             return new Point2D.Double(-1,-1);

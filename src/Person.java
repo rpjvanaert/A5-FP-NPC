@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * A class to represent a visitor
+ */
 public class Person {
     private Point2D position;
     private double angle;
@@ -27,6 +30,12 @@ public class Person {
     private double rotationSpeed;
     private String targetMapName;
 
+    /**
+     * A constructor of Person
+     * @param position the starting position of the Person
+     * @param genreChanceList a list for the probability of liking a Genre
+     * @param speed the movement speed of the Person
+     */
     public Person(Point2D position, ArrayList<Integer> genreChanceList, int speed) {
         this.position = position;
         imageDecider(genreChanceList);
@@ -37,6 +46,10 @@ public class Person {
         this.targetMapName = selectRandomMap();
     }
 
+    /**
+     * Assings the corresponding image and sound according to the liked superGenre
+     * @param genreChance
+     */
     public void imageDecider(ArrayList<Integer> genreChance) {
         int number = (int) (Math.random() * ((genreChance.get(6) - 1) + 1)) + 1;
 
@@ -104,6 +117,9 @@ public class Person {
         this.mediaPlayer = new MediaPlayer(this.soundEffect);
     }
 
+    /**
+     * decides the behavior of the Person
+     */
     public void choiceMaker() {
         int number = (int) (Math.random() * ((10 - 1) + 1)) + 1;
         if (number > 5/*this.favoriteGenre==genre.getSuperGenre()*/) {
@@ -160,6 +176,7 @@ public class Person {
         Point2D newPosition = new Point2D.Double(this.position.getX() + this.speed * Math.cos(this.angle),
                 this.position.getY() + this.speed * Math.sin(this.angle));
 
+        //colliding handler
         boolean collided = false;
 
         for (Person other : people) {
@@ -171,7 +188,10 @@ public class Person {
         if (!collided) {
             this.position = newPosition;
         } else {
-            this.angle -= this.rotationSpeed * 2;
+            int xOffset = (int) Math.floor( Math.random() * 2.9) - 1;
+            int yOffset = (int) Math.floor( Math.random() * 2.9) - 1;
+            this.target = new Point2D.Double(this.position.getX()+ xOffset * 32,
+                                                this.position.getY() + yOffset * 32);
         }
     }
 
@@ -202,6 +222,9 @@ public class Person {
         this.activity = activity;
     }
 
+    /**
+     * Plays an soundEffect according to the genre
+     */
     public void playSoundEffect() {
         if (this.favoriteGenre.equals("metal")) {
             this.mediaPlayer.setVolume(0.05);
@@ -217,14 +240,20 @@ public class Person {
         this.targetMapName = mapName;
     }
 
+    /**
+     * checks if the Person has arrived at the target
+     * @return
+     */
     public boolean hasArrivedAtTarget(){
         double distanceAmount = 17;
         return position.distance(target.getX(), target.getY()) < distanceAmount;
     }
 
+    /**
+     *checks if the Person has arrived at it's end destination
+     */
     private boolean hasArrivedAtDestination() {
         double distanceAmount = 16;
-        // TODO: Add logic
         if(this.target.distance(new Point2D.Double(-1,-1)) < distanceAmount){
             return true;
         }
@@ -235,6 +264,11 @@ public class Person {
         this.target = PathCalculator.nextTarget(this.position, targetMapName);
     }
 
+    /**
+     * For testing purposes!
+     * Selects a random distanceMap
+     * @return the name of the map
+     */
     public String selectRandomMap(){
         Random random = new Random();
         String mapName = null;

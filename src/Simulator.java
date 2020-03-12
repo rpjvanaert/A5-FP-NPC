@@ -59,7 +59,7 @@ public class Simulator extends Application {
         stage.show();
         draw(g2d);
 
-
+        //following mouse
 //        canvas.setOnMouseMoved(e ->
 //        {
 //            double zoom = this.cameraTransform.getZoom();
@@ -87,7 +87,7 @@ public class Simulator extends Application {
         this.people = new ArrayList<>();
         this.distanceMaps = new DistanceMap[stageAmount + toiletAmount];
 
-        // initializeDistanceMap();
+        // initialing DistanceMap
 
         Boolean[][] walkableMap = new Boolean[100][100];
         for (int i = 0; i < 100; i++) {
@@ -121,6 +121,14 @@ public class Simulator extends Application {
         } else {
             g2.setTransform(new AffineTransform());
         }
+        //testGrid
+//        for(int x = 0; x< canvas.getWidth(); x+=32){
+//            g2.drawLine(x,0,x,(int) canvas.getHeight());
+//        }
+//        for(int y = 0; y < canvas.getHeight(); y += 32){
+//            g2.drawLine(0,y,(int) canvas.getWidth(),y);
+//        }
+
         g2.setBackground(Color.WHITE);
         Shape rect = new Rectangle2D.Double(0, 0, 2500, 2500);
         g2.setPaint(Color.BLACK);
@@ -131,6 +139,11 @@ public class Simulator extends Application {
         }
     }
 
+    /**
+     * A method that checks if a spot is not occupied by another person
+     * @param spawnPosition the location to check if it's available
+     * @return true if empty, false if occupied
+     */
     public boolean canSpawn(Point2D spawnPosition) {
         if (this.people.size() <= 0) {
             return true;
@@ -145,6 +158,10 @@ public class Simulator extends Application {
         return true;
     }
 
+    /**
+     * Spawns a amount of people, stops spawning after 10% failed spawnAttempts of the amount
+     * @param amount the amount of people to be spawned
+     */
     public void spawnPeople(int amount) {
         int failedSpawnAttempts = 0;
 
@@ -165,6 +182,7 @@ public class Simulator extends Application {
             }
         }
     }
+
 
     public void clickAction(MouseEvent e) {
         for (Person person : this.people) {
